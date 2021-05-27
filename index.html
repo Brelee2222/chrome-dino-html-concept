@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <div id="gmctn" style="border:10px solid black;background:white;height:500px;width:1000px;">
+    <div id="dn" style="position:relative;width:80px;height:100px;background:grey;top:350px;left:50px;"></div>
+    <div id="obstcl1" style="overflow:hidden;height:100px;width:100px;background:black;left:0px;position:absolute;">
+      <img id="obstclrnd1"></img>
+    </div>
+    <div id="obstcl2" style="overflow:hidden;height:100px;width:100px;background:black;left:0px;position:absolute;">
+      <img id="obstclrnd2"></img>
+    </div>
+    <div id="obstcl3" style="overflow:hidden;height:100px;width:100px;background:black;left:0px;position:absolute;">
+      <img id="obstclrnd3"></img>
+    </div>
+  </div>
+  <script>
+    var obstacles = [{"plcmnt":-100,"type":0,"visible":false},{"plcmnt":-100,"type":0,"visible":false},{"plcmnt":-100,"type":0,"visible":false}]
+    var bodies = [document.getElementById('obstcl1'),document.getElementById('obstcl2'),document.getElementById('obstcl3')]
+    var speed = 0
+    var distance = 0
+    var obstclspwrt = 0.50
+    function speeds() {
+      speed +=1
+      console.log(speed)
+      setTimeout(speeds, speed*150)
+    };
+    function move() {
+      distance +=speed
+      if (obstacles[0].plcmnt - distance < 0) {
+        obstacles[0].visible = false
+      };
+      if (obstacles[1].plcmnt - distance < 0) {
+        obstacles[1].visible = false
+      };
+      if (obstacles[2].plcmnt - distance < 0) {
+        obstacles[2].visible = false
+      };
+      if (obstacles[0].visible) {
+        bodies[0].style.left = String(obstacles[0].plcmnt - distance) + "px";
+      } else {
+        bodies[0].style.display = 'none';
+      };
+      if (obstacles[1].visible) {
+        bodies[1].style.left = String(obstacles[1].plcmnt - distance) + "px";
+      } else {
+        bodies[1].style.display = 'none';
+      };
+      if (obstacles[2].visible) {
+        bodies[2].style.left = String(obstacles[2].plcmnt - distance) + "px";
+      } else {
+        bodies[2].style.display = 'none';
+      };
+      setTimeout(move,10)
+    };
+    function spawn() {
+      if (Math.random() <= obstclspwrt) {
+        reserve = -1
+        if (!(obstacles[2].visible)) {
+          reserve = 2
+        };
+        if (!(obstacles[1].visible)) {
+          reserve = 1
+        };
+        if (!(obstacles[0].visible)) {
+          reserve = 0
+        };
+        if (reserve + 1) {
+          bodies[reserve].style.display = 'block';
+          obstacles[reserve].visible = true;
+          obstacles[reserve].plcmnt = distance + 900;
+        };
+      };
+      setTimeout(spawn, 500)
+    };
+    speeds();
+    move();
+    spawn();
+  </script>
+</html>
