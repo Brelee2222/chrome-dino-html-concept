@@ -18,7 +18,7 @@
       this.plcmnt = distance + 950;
       bodies[reserve].style.left = String(obstacles[1].plcmnt - distance) + "px";
       bodies[reserve].style.display = 'block';
-      if (distance >= 300) {
+      if (distance >= 15000) {
         this.type = Math.floor(Math.random() * 9)
       } else {
         this.type = Math.floor(Math.random() * 6)
@@ -36,7 +36,8 @@
     function speeds() {
       speed +=1;
       console.log(speed);
-      setTimeout(speeds, speed*150);
+      console.log(distance)
+      setTimeout(speeds, speed*100);
     };
     function move() {
       if (obstacles[0].plcmnt - distance < 0) {
