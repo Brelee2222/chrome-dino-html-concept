@@ -13,18 +13,32 @@
     </div>
   </div>
   <script>
-    var obstacles = [{"plcmnt":-100,"type":0,"visible":false},{"plcmnt":-100,"type":0,"visible":false},{"plcmnt":-100,"type":0,"visible":false}]
+    var jsfncin = function(reserve) {
+      this.visible = true;
+      this.plcmnt = distance + 950;
+      bodies[reserve].style.left = String(obstacles[1].plcmnt - distance) + "px";
+      bodies[reserve].style.display = 'block';
+      if (distance >= 300) {
+        this.type = Math.floor(Math.random() * 9)
+      } else {
+        this.type = Math.floor(Math.random() * 6)
+      };
+      if (this.type <= 7) {
+        bodies[reserve].style.top = '368px'
+      };
+    };
+    var obstacles = [{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin}];
     var bodies = [document.getElementById('obstcl1'),document.getElementById('obstcl2'),document.getElementById('obstcl3')]
+    var obsimg = [document.getElementById('obstclrnd1'), document.getElementById('obstclrnd2'), document.getElementById('obstclrnd3')]
     var speed = 0
     var distance = 0
-    var obstclspwrt = 0.50
+    var obstclspwrt = 0.80
     function speeds() {
-      speed +=1
-      console.log(speed)
-      setTimeout(speeds, speed*150)
+      speed +=1;
+      console.log(speed);
+      setTimeout(speeds, speed*150);
     };
     function move() {
-      distance +=speed
       if (obstacles[0].plcmnt - distance < 0) {
         obstacles[0].visible = false
       };
@@ -49,7 +63,11 @@
       } else {
         bodies[2].style.display = 'none';
       };
-      setTimeout(move,10)
+      setTimeout(move,1)
+    };
+    function score() {
+      distance +=1
+      setTimeout(score,10/speed)
     };
     function spawn() {
       if (Math.random() <= obstclspwrt) {
@@ -64,17 +82,15 @@
           reserve = 0
         };
         if (reserve + 1) {
-          obstacles[reserve].visible = true;
-          obstacles[reserve].plcmnt = distance + 900;
-          bodies[reserve].style.left = String(obstacles[1].plcmnt - distance) + "px";
-          bodies[reserve].style.display = 'block';
-          setTimeout(spawn, reserve * 500 + 2000)
+          obstacles[reserve].spwn(reserve);
         };
       };
-      setTimeout(spawn, 1000)
+      setTimeout(spawn, 1000 / (speed / 2) + 1400);
     };
+
     speeds();
     move();
     spawn();
+    score();
   </script>
 </html>
