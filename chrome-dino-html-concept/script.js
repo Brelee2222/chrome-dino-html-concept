@@ -1,10 +1,31 @@
+var dnsprt = 0
+var sprt = {
+  "Idle":"/chrome-dino-html-concept/dino.png",
+  "RunL":"/chrome-dino-html-concept/dinorunl.png",
+  "RunR":"/chrome-dino-html-concept/dinorunr.png"
+};
+var death = false
+var sided = true
+var dnh = 0
+var dnmvmntdt = {
+  "a":1,
+  "JumpHeight":40,
+  "h":0,
+  "distance":0,
+  "sp":0.2,
+  "quadratics":function() {
+    this.h = Math.abs(Math.sqrt(4*(this.a*this.JumpHeight)));
+  }
+};
+dnmvmntdt.quadratics()
+console.log(dnmvmntdt.h)
 var jsfncin = function(reserve) {
   this.visible = true;
   this.plcmnt = distance + 950;
   bodies[reserve].style.left = String(obstacles[1].plcmnt - distance) + "px";
   bodies[reserve].style.display = 'block';
   if (distance >= 30000) {
-    this.type = Math.floor(Math.random() * 9)
+    this.type = Math.floor(Math.random() * 10)
   } else {
     this.type = Math.floor(Math.random() * 6)
   };
@@ -14,11 +35,11 @@ var jsfncin = function(reserve) {
     if (this.type == 8) {
       bodies[reserve].style.top = '288px'
     } else {
-      bodies[reserve].style.top = '268px'
+      bodies[reserve].style.top = '238px'
     };
   };
 };
-var obstacles = [{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin}];
+var obstacles = [{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin,"hitbox":[]},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin,"hitbox":[]},{"plcmnt":-100,"type":0,"visible":false,"spwn":jsfncin,"hitbox":[]}];
 var bodies = [document.getElementById('obstcl1'),document.getElementById('obstcl2'),document.getElementById('obstcl3')]
 var obsimg = [document.getElementById('obstclrnd1'), document.getElementById('obstclrnd2'), document.getElementById('obstclrnd3')]
 var speed = 1
@@ -29,6 +50,7 @@ function speeds() {
   setTimeout(speeds, speed*180);
 };
 function move() {
+  if (dnh < 0) {dnh = 0;};
   if (obstacles[0].plcmnt - distance < 0) {
     obstacles[0].visible = false
   };
@@ -53,6 +75,11 @@ function move() {
   } else {
     bodies[2].style.display = 'none';
   };
+  if (dnmvmntdt.distance <= 2*dnmvmntdt.h) {
+    setTimeout(dnjmp,100);
+  } else {
+    dnh = 0
+  };
   setTimeout(move,1)
 };
 function score() {
@@ -75,10 +102,41 @@ function spawn() {
       obstacles[reserve].spwn(reserve);
     };
   };
-  setTimeout(spawn, 1000 / (speed / 2) + (5 * 100));
+  setTimeout(spawn, 10 * speed + 1000);
 };
-
+function dnjmp() {
+  dnh = -Math.pow(dnmvmntdt.a*(dnmvmntdt.distance - dnmvmntdt.h),2) + 4*(dnmvmntdt.JumpHeight);
+  dnmvmntdt.distance +=dnmvmntdt.sp
+};
+document.onkeydown = function key(event) {if (dnh <= 0) {
+  dnmvmntdt.distance = 1;
+  dnjmp
+}};
+function dnps() {
+  if (dnh < 0) {dnh = 0;};
+  document.getElementById('dn').style.top = String(374 - dnh) + 'px'
+  
+  setTimeout(dnps,10);
+};
+function dnanimation() {
+ if (sided) {
+  document.getElementById('dnsprt').src = sprt.RunL;
+ } else {
+   document.getElementById('dnsprt').src = sprt.RunR;
+ };
+ if (dnh > 0) {
+  document.getElementById('dnsprt').src = sprt.Idle;
+ };
+ setTimeout(dnanimation,10)
+};
+function changesided() {
+  sided = !sided;
+  setTimeout(changesided,500);
+};
 speeds();
 move();
 spawn();
 score();
+dnps();
+changesided();
+dnanimation();
