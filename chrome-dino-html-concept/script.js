@@ -46,8 +46,11 @@ var speed = 1
 var distance = 0
 var obstclspwrt = 0.80
 function speeds() {
-  speed +=1;
-  setTimeout(speeds, speed*180);
+  if (speed < 30) {
+    speed +=1;
+    setTimeout(speeds, speed*180);
+    console.log(speed)
+  };
 };
 function move() {
   if (dnh < 0) {dnh = 0;};
@@ -131,7 +134,7 @@ function dnanimation() {
 };
 function changesided() {
   sided = !sided;
-  setTimeout(changesided,500);
+  setTimeout(changesided,250);
 };
 speeds();
 move();
